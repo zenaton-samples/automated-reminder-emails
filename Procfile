@@ -1,2 +1,2 @@
-web: node web_app/server.js
+web: npm run start
 zenatonworker: tail -f /dev/null

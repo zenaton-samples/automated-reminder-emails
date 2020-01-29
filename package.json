@@ -6,7 +6,7 @@
   "scripts": {
     "heroku-prebuild": "cd web_app && npm install && cd ../worker && npm install",
     "heroku-postbuild": "cd web_app && npm run build",
-    "start": "cd web_app && node server.js"
+    "start": "cd web_app && npm run express:run --port 4000"
   },
   "repository": {
     "type": "git",
