@@ -29,7 +29,7 @@ We've provided a simple UI in the web_app that allows you to simulate the user e
 # Requirements:
 
 - A [Zenaton](https://app.zenaton.com) account (its free!)
-- An API key from [Sendgrid](https://app.sendgrid.com/settings/api_keys), to connect Zenaton to Sendgrid. Show our [guide](/doc/create-sendgrid-account.md)
+- An API key from [Sendgrid](https://app.sendgrid.com/settings/api_keys), to connect Zenaton to Sendgrid.
 
 ## Basic Workflow Version: Send a email based on user actions within your app
 
