@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zenaton/new-user-workflow.git"
+    "url": "git+https://github.com/zenaton-samples/automated-reminder-emails.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zenaton/new-user-workflow/issues"
+    "url": "https://github.com/zenaton-samples/automated-reminder-emails/issues"
   },
-  "homepage": "https://github.com/zenaton/new-user-workflow#readme",
+  "homepage": "https://github.com/zenaton-samples/automated-reminder-emails#readme",
   "dependencies": {}
 }
