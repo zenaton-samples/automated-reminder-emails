@@ -95,8 +95,8 @@ You can test it from your command line interface:
 curl -X POST https://gateway.zenaton.com/graphql \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
-  -H "Authorization: Bearer <API_TOKEN> \
-  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"BookAPlaceWorkflow","input":["<email>", "<date>"]}}}'
+  -H "Authorization: Bearer <API_TOKEN>" \
+  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<API_ID>","environment":"dev","name":"BookAPlaceWorkflow","input":"[{\"email\":\"<email>\", \"date\":\"<date>\"}]"}}}'
 ```
 
 > Do not forget to replace `<APP_ID>` and `<API_TOKEN>` by your Zenaton AppId and api token.
@@ -110,8 +110,8 @@ curl -X POST https://gateway.zenaton.com/graphql \
 curl -X POST https://gateway.zenaton.com/graphql \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
-  -H "Authorization: Bearer <API_TOKEN> \
-  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"ReminderLoopWorkflow","input":["<email>", "<max_wait>", "<nb_max_reminder>"]}}}'
+  -H "Authorization: Bearer <API_TOKEN>" \
+  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"ReminderLoopWorkflow","input":"[{\"email\":\"<email>\", \"max_wait\":<max_wait>, \"nb_max_reminder\":<nb_max_reminder>}]"}}}'
 ```
 
 > Do not forget to replace `<APP_ID>` and `<API_TOKEN>` by your Zenaton AppId and api token.
