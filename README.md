@@ -1,133 +1,156 @@
-# New User Activation Emails: 
-### Wait for events and trigger emails:
+# Zenaton Samples - Automated Reminder Emails
 
-Here is a sample Zenaton project that waits for events within a web app and triggers personalized emails to our users when they complete each milestone (Installation and Activation).  Our example is based on a Zenaton new user journey but can easily be configured to send emails and trigger actions based on any events within an app or in external services.
+This is an example of Zenaton project showcasing how you can schedule automatic emails based on time or external events.
 
-## Workflow Logic
+There are two workflows in this project:
 
-When a new user registers, we start a new "NewUserWorkflow" instance for that user. 
+1. `BookAPlaceWorkflow.js` sends emails based on intervals before a time.
+2. `ReminderLoopWorkflow.js` will send up to a set number of emails, unless it receives some external events.
 
-This workflow will wait for events and trigger actions - including emails - when the events happen. The workflow can run for days, months or even longer if the events happen much later.
+## Development
 
-![Workflow chart](/doc/images/flowchart.png)
+The `boot.js` file is where you tell the Zenaton Agent where to find - by name - the source code of your tasks and workflows. Also, you can set whether or not emails will be sent through the Sendground API or SDK.
 
-In our sample web_app, we send 2 events to our workflow to trigger activities (`installation`, and `activation`).  
+> If you add a task or a workflow to your project, do not forget to update the `boot.js` file.
 
-We use several Zenaton functions in our workflow such as 'wait for event' and 'wait for duration' as well as connectors to manage the authentication for Sendgrid and Airtable.  
+Look at Zenaton documentation to learn how to implement [workflows](https://docs.zenaton.com/workflows/implementation/) and [tasks](https://docs.zenaton.com/tasks/implementation/).
 
-The github repository is split into two directories:
+## Run
 
-- **[web_app](/web_app)**: a simple NodeJS web app where we launch the workflow instance per user when they register and send events when the user installs or runs their first workflow.
-- **[worker](/worker)**: Runs the workflow and tasks and receives the events for each workflow instance.
+### Requirements
 
-## Web_App UI for testing
+This example project uses uses Sendgrid to send some emails. You will need a Sendgrid API key to be able to send emails. If you don't have one yet, you can sign-in to your Sendgrid account and get an API [here](https://app.sendgrid.com/settings/api_keys). You will need to set the API key in your `.env` file.
 
-We've provided a simple UI in the web_app that allows you to simulate the user events (`installation` or `activation`) to trigger actions in the workflow and see the corresponding tasks executions on your Zenaton dashboard:
+### Starting the workflow
 
-![Sample we_app and Zenaton dashboard](/doc/images/web-app-dashboard.png)
+You can dispatch tasks and workflows by name from everywhere using [Zenaton API](https://docs.zenaton.com/client/graphql-api/).
+They will be processed as soon as you run this project.
 
-# Requirements:
+> Note: tasks and workflows are dispatched in an environment (`AppEnv`) of your Zenaton application (`AppId`).
+> They will be processed by this project, **if** you setup it with the same `AppId` and `AppEnv`. You must also provide an `Api Token`
+> to authorize access to this application (found at https://app.zenaton.com/api)
 
-- A [Zenaton](https://app.zenaton.com) account (its free!)
-- An API key from [Sendgrid](https://app.sendgrid.com/settings/api_keys), to connect Zenaton to Sendgrid.
+### Run Locally
 
-## Basic Workflow Version: Send a email based on user actions within your app
+First, install dependencies:
 
-- Set up your SendGrid api connector on the Zenaton dashboard using our [guide](/doc/setup-sendgrid-connector.md).
-- Fork the repo so that you can easily change the variables and logic within the workflow and see the impact.  
-- deploy it using this button [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) or this [link](https://heroku.com/deploy?template=https://github.com/zenaton/new-user-workflow) if the button do not work. We also have other [deployment options](#other-options-to-deploy-your-project)
-
-
-Then you can start to use it:
-- Click on 'Register' to simulate signup which launches the workflow instance for a user.
-- Click on the 'installation' and 'activation' buttons to simulate sending events to the running workflow for that user.
-
-
-Feel free to play around and test the different scenarios.
-
-Note: you can also change the 'wait' duration to 5 seconds to speed up your testing experience.
-
-## Other Workflow Versions
-
-Here are a few other examples to send emails with conditional content.
-
-### Sendgrid Template with conditional blocks
-
-To run this example, you will need to setup a dynamic template inside Sendgrid.
-Here is our [guide](/doc/create-dynamic-template.md)
-
-### Hybrid: Modify the email content from an AirTable database
-
-To run this example, you will need to
-- [import an AirTable base](/doc/create-airtable-table.md)
-- [get the API key](/doc/get-airtable-api-key.md) of this new base
-- setup a [Zenaton connector](/doc/setup-airtable-connector.md) for the airtable API
-
-## Other options to deploy your project
-
-If you want to take it to the next level and customize your workflow, here are a few ways to install and run it on your own dev environments:  
-
-- Run on your local environment using docker or by installing Zenaton on your computer
-
-- Run on your servers [(View the Zenaton Docs)](https://zenaton.com/documentation/node/going-to-production/#intro)
-
-### Run locally
-
-To get started we will install the agent and start the web_app and agent.  
-
-#### Start the web_app
-
-```
-git clone https://github.com/zenaton-samples/automated-reminder-emails
-cd automated-reminder-emails/web_app
-cp .env.sample .env
+```sh
+npm install
 ```
 
-Fill the `.env` file. Note that some environment variables are optional.
+Then, fill-in the environment variables referenced in the `.env` file.
 
-Fetch the dependencies
-```
-yarn && yarn build
-```
+Install a Zenaton Agent:
 
-Start the web_app
-```
-yarn run express:run
-```
-
-#### Start the agent
-
-If you do not have the agent already installed
-```
+```sh
 curl https://install.zenaton.com | sh
 ```
 
-Then
-```
-cd ../worker
-cp .env.sample .env
-yarn
-zenaton start
+and run it:
+
+```sh
 zenaton listen --boot=boot.js
 ```
 
-### Run with Docker
+### Run in Docker
 
-```
-git clone https://github.com/zenaton-samples/automated-reminder-emails
-cd automated-reminder-emails/web_app
-cp .env.sample .env
-```
+Create your `.env` file
 
-```
-cd ../worker
-cp .env.sample .env
+```sh
+cp -n .env.sample .env
 ```
 
-Fill the `.env` files. Note that some environment variables are optional.
+and fill-in the environment variables referenced in the `.env` file.
 
-Start docker
+Then start your container:
+
+```sh
+cd docker && docker-compose up
 ```
-cd ../
-docker-compose up
+
+### Run on Heroku
+
+Follow this button [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy), then fill in the env variables and click "deploy".
+
+### Run somewhere else
+
+Check our [documentation](https://docs.zenaton.com/going-to-production/) for more options (AWS, Google Cloud, Clever Cloud ...)
+
+### Checking that your project is running
+
+Whatever your installation method, you should see that a new Agent is listening from this url: https://app.zenaton.com/agents. If you do not
+see it, please check again that you have selected the right application and environment.
+
+## Dispatching Tasks and Workflows
+
+### Using Zenaton API
+
+Tasks and workflows can be dispatched by name from everywhere using the [Zenaton API](https://docs.zenaton.com/client/graphql-api/) or our [Node.js SDK](https://github.com/zenaton/zenaton-node).
+
+You can test it from your command line interface:
+
+#### Dispatching a `"BookAPlaceWorkflow"` workflow:
+
+```bash
+curl -X POST https://gateway.zenaton.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer <API_TOKEN> \
+  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"BookAPlaceWorkflow","input":["<email>", "<date>"]}}}'
 ```
+
+> Do not forget to replace `<APP_ID>` and `<API_TOKEN>` by your Zenaton AppId and api token.
+
+> `<email>` is the email address messages will be sent to.
+> `<date>` is the date of the booking. You can use a format like "October 13, 2020 11:00:00".
+
+#### Dispatching a `"ReminderLoopWorkflow"` workflow:
+
+```bash
+curl -X POST https://gateway.zenaton.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer <API_TOKEN> \
+  -d '{"query":"mutation($input: DispatchWorkflowInput!) { dispatchWorkflow(input: $input) { id } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"ReminderLoopWorkflow","input":["<email>", "<max_wait>", "<nb_max_reminder>"]}}}'
+```
+
+> Do not forget to replace `<APP_ID>` and `<API_TOKEN>` by your Zenaton AppId and api token.
+
+> `<email>` is the email address messages will be sent to.
+> `<max_wait>` is maximum amount of time to wait for events to be received before senidng a reminder.
+> `<nb_max_reminder>` is maximum number of reminders to send before giving up.
+
+This workflow will expect two events. First, `"EventA"`, then `"EventB"`.
+
+Sending an `"EventA"` event to this workflow:
+
+```bash
+curl -X POST https://gateway.zenaton.com/graphql \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer <API_TOKEN> \
+  -d '{"query":"mutation($input: SendEventToWorkflowsInput!) { sendEventToWorkflows(input: $input) { status } }","variables":{"input":{"appId":"<APP_ID>","environment":"dev","name":"EventA","selector":{"id":"<WORKFLOW_ID>"}}}}'
+```
+
+> Do not forget to replace `<APP_ID>` and `<API_TOKEN>` by your Zenaton AppId and api token. And <WORKFLOW_ID> by your workflow's id that you have received when dispatched.
+
+### Example App
+
+We have provided an [example app](https://github.com/zenaton/nodejs-example-app) with basic UI to dispatch workflows and events with associated data to your Zenaton project. After installation, you can (optionaly) add your workflows and some examples of input and event in the `public/config.json` file. eg.
+
+```json
+{
+  "workflows": [
+    {
+      "name": "BookAPlaceWorkflow",
+      "input": ["<email>", "<date>"]
+    }
+  ]
+}
+```
+
+> You need to rebuild your example app after having modified this file. If you prefer, you can update directly `dist/config.json` and simply reload the page - but your changes will be lost at the next rebuild.
+
+## Monitoring Tasks and Worklows Processing
+
+Look at your [dashboard](https://app.zenaton.com/workflows) (if you do not see your dispatched tasks or workflows, please check that you have selected the right application and environment).
