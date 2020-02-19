@@ -26,11 +26,6 @@
         "value": "dev",
         "required": true
       },
-      "ZENATON_LISTEN_ARGS": {
-        "description": "The Zenaton Agent listen args",
-        "value": "--boot=worker/boot.js --node",
-        "required": true
-      },
       "SENDGRID_API_KEY": {
         "description": "Your Sendgrid API KEY",
         "required": true
